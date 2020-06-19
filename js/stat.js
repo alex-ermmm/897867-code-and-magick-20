@@ -1,135 +1,64 @@
 'use strict';
 
-window.renderStatistics = function (ctx, names, times) {
+var CLOUD_WIDTH = 420;
+var CLOUD_HEIGHT = 270;
+var CLOUD_GAP = 10;
+var CLOUD_X = 100;
+var CLOUD_Y = 10;
+var GAP = 50;
+var FONT_GAP = 260;
+var TEXT_HEIGTH = 50;
+var BAR_WIDTH = 40;
+var barHeight = CLOUD_HEIGHT - CLOUD_GAP - TEXT_HEIGTH - CLOUD_GAP;
+var HEADER_TEXT_X = 150;
+var HEADER_TEXT_Y = 50;
+var HEADER_TEXT_GAP = 20;
 
-  // Отрисовка облака
+// отрисвока облака
+var renderCloud = function (ctx, x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+};
 
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
+// получаем максимальный элементы
+var getMaxElement = function (arr) {
+  var maxElement = arr[0];
 
-  ctx.lineTo(110, 25);
-
-  ctx.shadowOffsetX = 10;
-  ctx.shadowOffsetY = 10;
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-
-  var currentX = 110;
-  var currentY = 25;
-  var y1 = 10;
-  var y2 = 10;
-  var step = 100;
-  var cloudIndent = 10;
-  var cloudBodySize = 80;
-  var endY = currentY;
-  for (var i = 0; i < 4; i++) {
-    var endX = currentX + step;
-    var x1 = currentX + cloudIndent;
-    var x2 = x1 + cloudBodySize;
-    currentX += step;
-    ctx.bezierCurveTo(x1, y1, x2, y2, endX, endY);
-  }
-
-  ctx.fill();
-
-  step = 80;
-  cloudBodySize = 60;
-  x1 = 520;
-  x2 = 520;
-  currentX = endX;
-  for (var j = 0; j < 3; j++) {
-    endY = currentY + step;
-    y1 = currentY + cloudIndent;
-    y2 = y1 + cloudBodySize;
-    currentY += step;
-    ctx.bezierCurveTo(x1, y1, x2, y2, endX, endY);
-  }
-
-  ctx.fill();
-
-  step = 100;
-  cloudBodySize = 80;
-  y1 = 280;
-  y2 = 280;
-  currentY = endY;
-  for (i = 0; i < 4; i++) {
-    endX = currentX - step;
-    x1 = currentX - cloudIndent;
-    x2 = x1 - cloudBodySize;
-    currentX -= step;
-    ctx.bezierCurveTo(x1, y1, x2, y2, endX, endY);
-  }
-
-  ctx.fill();
-
-  step = 80;
-  cloudBodySize = 60;
-  x1 = 100;
-  x2 = 100;
-  currentX = endX;
-  for (j = 0; j < 3; j++) {
-    endY = currentY - step;
-    y1 = currentY - cloudIndent;
-    y2 = y1 - cloudBodySize;
-    currentY -= step;
-    ctx.bezierCurveTo(x1, y1, x2, y2, endX, endY);
-  }
-
-  ctx.fill();
-
-  ctx.closePath();
-
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
-  ctx.shadowColor = 'transparent';
-
-  ctx.fillStyle = '#000000';
-  ctx.font = '16px PT Mono';
-  ctx.fillText('Ура! Вы победили!', 230, 40);
-  ctx.fillText('Список результатов:', 220, 60);
-
-  // Вычисление максимального значения
-
-  var getMaxValue = function (anyArray) {
-    var maxValue = -1;
-
-    for (var index = 0; index < anyArray.length; index++) {
-      if (anyArray[index] > maxValue) {
-        maxValue = anyArray[index];
-      }
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] > maxElement) {
+      maxElement = arr[i];
     }
-    return maxValue;
-  };
+  }
 
-  // Определение цвета
+  return maxElement;
+};
 
-  var getPlayerColor = function (playerName) {
-    if (playerName === 'Вы') {
-      return 'rgba(255, 0, 0, 1)';
+function getRandomColorHex(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+window.renderStatistics = function (ctx, players, times) {
+  renderCloud(ctx, CLOUD_X + CLOUD_GAP, CLOUD_Y + CLOUD_GAP, 'rgba(0, 0, 0, 0.7)');
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
+
+  ctx.fillStyle = '#000';
+  ctx.font = '15px PT Mono';
+  ctx.fillText('Ура вы победили!', HEADER_TEXT_X, HEADER_TEXT_Y);
+  ctx.fillText('Список результатов:', HEADER_TEXT_X, HEADER_TEXT_Y + HEADER_TEXT_GAP);
+
+  var maxTime = getMaxElement(times);
+
+  for (var i = 0; i < players.length; i++) {
+    // проверяем на "вы"
+    if (players[i] === 'Вы') {
+      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
-      return 'rgba(0, 0, 255, ' + (Math.random() + 0.1).toFixed(1) + ')';
+      ctx.fillStyle = 'hsl(253, 96%, ' + getRandomColorHex(0, 100) + '%)';
     }
-  };
+    // описание слолбцов гистрограммы
+    ctx.fillText(players[i], GAP + CLOUD_X + (GAP * i * 2), FONT_GAP);
 
-  // Построение гистограммы
-
-  var histogramHeight = 150;
-  var initialX = 150;
-  var initialY = 245;
-  var columnIndent = 90;
-  var columnWidth = 40;
-  var lineHeight = 20;
-  var maxTime = getMaxValue(times);
-
-  for (j = 0; j < times.length; j++) {
-    var playerTime = Math.round(times[j]);
-    var columnHeight = playerTime * histogramHeight / (maxTime - 0);
-
-    ctx.fillStyle = getPlayerColor(names[j]);
-    ctx.fillRect(initialX + j * columnIndent, initialY, columnWidth, columnHeight * (-1));
-
-    ctx.fillStyle = '#000000';
-    ctx.fillText(playerTime, initialX + j * columnIndent, initialY - columnHeight - lineHeight / 2);
-    ctx.fillText(names[j], initialX + j * columnIndent, initialY + lineHeight);
+    // элемент гистрограммы
+    ctx.fillRect(GAP + CLOUD_X + (GAP * i * 2), CLOUD_HEIGHT - (GAP / 2), BAR_WIDTH, -(barHeight * times[i]) / maxTime + HEADER_TEXT_Y);
   }
-
 };
