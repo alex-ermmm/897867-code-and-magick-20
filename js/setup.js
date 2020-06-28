@@ -9,51 +9,50 @@ var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 var userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
 
-
 // куда будем вставлять магов
 var similarListElement = document.querySelector('.setup-similar-list');
 
 // шаблон элементов
-var similarWizardTemplate = document.querySelector('#similar-wizard-template')
-  .content
-  .querySelector('.setup-similar-item');
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 
 // возвращаем случайны элемент массива
-function getRamdomElement(array) {
+function getRandomValue(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
 // возвращаем склеенное, случаное имя и фамилию
-function genetareName(names, family) {
-  return getRamdomElement(names) + ' ' + getRamdomElement(family);
+function createFullName(names, family) {
+  return getRandomValue(names) + ' ' + getRandomValue(family);
 }
 
 // отрисовываем элементы (карточки) магов
-function renderWizard(name, family, coatColor, eyesColor) {
+function createWizardElement(name, family, coatColor, eyesColor) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
 
   // вставлем случайное имя
-  wizardElement.querySelector('.setup-similar-label').textContent = genetareName(name, family);
+  wizardElement.querySelector('.setup-similar-label').textContent = createFullName(name, family);
 
   // заливаем плащ случайным цветом из массива
-  wizardElement.querySelector('.wizard-coat').style.fill = getRamdomElement(coatColor);
+  wizardElement.querySelector('.wizard-coat').style.fill = getRandomValue(coatColor);
 
   // заливаем глаза случайным цветом из массива
-  wizardElement.querySelector('.wizard-eyes').style.fill = getRamdomElement(eyesColor);
+  wizardElement.querySelector('.wizard-eyes').style.fill = getRandomValue(eyesColor);
 
   return wizardElement;
 }
 
-var fragment = document.createDocumentFragment();
+function renderWizards(names, famyliNames, coatColor, eyesColor) {
+  var fragment = document.createDocumentFragment();
 
-// записываем в фрагмент
-for (var i = 0; i < COUNT_WIZARDS; i++) {
-  fragment.appendChild(renderWizard(WIZARD_NAMES, WIZARD_FAMILYNAME, WIZARD_COAT_COLOR, WIZARD_EYES_COLOR));
+  // записываем в фрагмент
+  for (var i = 0; i < COUNT_WIZARDS; i++) {
+    fragment.appendChild(createWizardElement(names, famyliNames, coatColor, eyesColor));
+  }
+
+  // выводим магов в блок похожих персонажей
+  return similarListElement.appendChild(fragment);
 }
 
-// выводим магов в блок похожих персонажей
-similarListElement.appendChild(fragment);
+renderWizards(WIZARD_NAMES, WIZARD_FAMILYNAME, WIZARD_COAT_COLOR, WIZARD_EYES_COLOR);
 
 document.querySelector('.setup-similar').classList.remove('hidden');
-
-
