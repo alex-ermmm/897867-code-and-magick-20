@@ -5,9 +5,13 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 var WIZARD_FAMILYNAME = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
+var WIZARD_FIREBALL_COLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+var MIN_NAME_LENGTH = 2;
+var MAX_NAME_LENGTH = 25;
+
+// var userDialog = document.querySelector('.setup');
+// userDialog.classList.remove('hidden');
 
 // куда будем вставлять магов
 var similarListElement = document.querySelector('.setup-similar-list');
@@ -56,3 +60,110 @@ function renderWizards(names, famyliNames, coatColor, eyesColor) {
 renderWizards(WIZARD_NAMES, WIZARD_FAMILYNAME, WIZARD_COAT_COLOR, WIZARD_EYES_COLOR);
 
 document.querySelector('.setup-similar').classList.remove('hidden');
+
+// работа с открытием и закрытием окна
+
+var setupOpen = document.querySelector('.setup-open');
+var setup = document.querySelector('.setup');
+var setupClose = document.querySelector('.setup-close');
+
+var onPopupEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    closePopup();
+  }
+};
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    closePopup();
+  }
+});
+
+// валидация форм
+var userNameInput = document.querySelector('.setup-user-name');
+
+userNameInput.addEventListener('invalid', function () {
+  if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Обязательное поле');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
+
+userNameInput.addEventListener('input', function () {
+  var valueLength = userNameInput.value.length;
+
+  if (valueLength < MIN_NAME_LENGTH) {
+    userNameInput.setCustomValidity('Ещё ' + (MIN_NAME_LENGTH - valueLength) + ' симв.');
+  } else if (valueLength > MAX_NAME_LENGTH) {
+    userNameInput.setCustomValidity('Удалите лишние ' + (valueLength - MAX_NAME_LENGTH) + ' симв.');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
+
+// функция генерирует случайным образом элемнты мага
+function randomWizardStyle(style) {
+  return style[Math.floor(Math.random() * style.length)];
+}
+
+// меняем цвет мантии и передем его в скрытый input
+var wizardsCoatColor = document.querySelector('.setup-wizard .wizard-coat');
+var wizardsCoatColorInputHidden = document.querySelector('input[name="coat-color"]');
+
+wizardsCoatColor.addEventListener('click', function () {
+  var newColor = randomWizardStyle(WIZARD_COAT_COLOR);
+  wizardsCoatColor.style.fill = newColor;
+  wizardsCoatColorInputHidden.value = newColor;
+});
+
+// меняем цвет глаз и передем его в скрытый input
+var wizardsEyesColor = document.querySelector('.setup-wizard .wizard-eyes');
+var wizardsCoatEyesInputHidden = document.querySelector('input[name="eyes-color"]');
+
+wizardsEyesColor.addEventListener('click', function () {
+  var newColor = randomWizardStyle(WIZARD_EYES_COLOR);
+
+  wizardsEyesColor.style.fill = newColor;
+  wizardsCoatEyesInputHidden.value = newColor;
+});
+
+// меняем цвет фаербола и передем его в скрытый input
+var wizardsFireball = document.querySelector('.setup-fireball-wrap');
+var wizardsFireballInputHidden = wizardsFireball.querySelector('input');
+
+wizardsFireball.addEventListener('click', function () {
+  var newBackground = randomWizardStyle(WIZARD_FIREBALL_COLOR);
+
+  wizardsFireball.style.background = newBackground;
+  wizardsFireballInputHidden.value = newBackground;
+});
+
+
