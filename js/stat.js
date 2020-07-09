@@ -62,5 +62,3 @@ window.renderStatistics = function (ctx, players, times) {
     ctx.fillRect(GAP + CLOUD_X + (GAP * i * 2), CLOUD_HEIGHT - (GAP / 2), BAR_WIDTH, -(barHeight * times[i]) / maxTime + HEADER_TEXT_Y);
   }
 };
-
-test
