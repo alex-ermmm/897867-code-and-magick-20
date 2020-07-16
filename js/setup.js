@@ -1,18 +1,18 @@
 'use strict';
 (function setup() {
-  var COUNT_WIZARDS = 4;
-  var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var WIZARD_FAMILYNAME = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-
   window.setup = {
+    COUNT_WIZARDS: 4,
+    WIZARD_NAMES: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'],
+    WIZARD_FAMILYNAME: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
+
     WIZARD_COAT_COLOR: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
-    WIZARD_EYES_COLOR: ['black', 'red', 'blue', 'yellow', 'green']
+    WIZARD_EYES_COLOR: ['black', 'red', 'blue', 'yellow', 'green'],
+
+    WIZARD_FIREBALL_COLOR: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
+
+    MIN_NAME_LENGTH: 2,
+    MAX_NAME_LENGTH: 25
   };
-
-  window.WIZARD_FIREBALL_COLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-
-  window.MIN_NAME_LENGTH = 2;
-  window.MAX_NAME_LENGTH = 25;
 
   // куда будем вставлять магов
   var similarListElement = document.querySelector('.setup-similar-list');
@@ -50,7 +50,7 @@
     var fragment = document.createDocumentFragment();
 
     // записываем в фрагмент
-    for (var i = 0; i < COUNT_WIZARDS; i++) {
+    for (var i = 0; i < window.setup.COUNT_WIZARDS; i++) {
       fragment.appendChild(createWizardElement(names, famyliNames, coatColor, eyesColor));
     }
 
@@ -58,7 +58,7 @@
     return similarListElement.appendChild(fragment);
   }
 
-  renderWizards(WIZARD_NAMES, WIZARD_FAMILYNAME, window.setup.WIZARD_COAT_COLOR, window.setup.WIZARD_EYES_COLOR);
+  renderWizards(window.setup.WIZARD_NAMES, window.setup.WIZARD_FAMILYNAME, window.setup.WIZARD_COAT_COLOR, window.setup.WIZARD_EYES_COLOR);
 
   document.querySelector('.setup-similar').classList.remove('hidden');
 

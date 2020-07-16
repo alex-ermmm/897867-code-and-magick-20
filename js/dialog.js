@@ -2,9 +2,9 @@
 
 (function () {
   // работа с открытием и закрытием окна
-  var setupOpen = document.querySelector('.setup-open');
+  var onSetupOpenKeydown = document.querySelector('.setup-open');
   var setup = document.querySelector('.setup');
-  var setupClose = document.querySelector('.setup-close');
+  var onSetupCloseKeydown = document.querySelector('.setup-close');
 
 
   function onPopupEscPress(evt) {
@@ -27,7 +27,7 @@
     setDefaultPositionPopup();
   }
 
-  setupOpen.addEventListener('click', openPopup);
+  onSetupOpenKeydown.addEventListener('click', openPopup);
 
   function keydownEnterOpenPopup(evt) {
     if (evt.key === 'Enter') {
@@ -36,9 +36,9 @@
     }
   }
 
-  setupOpen.addEventListener('keydown', keydownEnterOpenPopup);
+  onSetupOpenKeydown.addEventListener('keydown', keydownEnterOpenPopup);
 
-  setupClose.addEventListener('click', closePopup);
+  onSetupCloseKeydown.addEventListener('click', closePopup);
 
   function keydownEnterClosePopup(evt) {
     if (evt.key === 'Enter') {
@@ -47,26 +47,26 @@
     }
   }
 
-  setupClose.addEventListener('keydown', keydownEnterClosePopup);
+  onSetupCloseKeydown.addEventListener('keydown', keydownEnterClosePopup);
 
   // валидация форм
-  var userNameInput = document.querySelector('.setup-user-name');
+  var onUsertNameChange = document.querySelector('.setup-user-name');
 
   function checkInputLengthUser() {
-    var valueLength = userNameInput.value.length;
+    var valueLength = onUsertNameChange.value.length;
 
-    if (userNameInput.validity.valueMissing) {
-      userNameInput.setCustomValidity('Обязательное поле');
-    } else if (valueLength < window.MIN_NAME_LENGTH) {
-      userNameInput.setCustomValidity('Ещё ' + (window.MIN_NAME_LENGTH - valueLength) + ' симв.');
-    } else if (valueLength > window.MAX_NAME_LENGTH) {
-      userNameInput.setCustomValidity('Удалите лишние ' + (valueLength - window.MAX_NAME_LENGTH) + ' симв.');
+    if (onUsertNameChange.validity.valueMissing) {
+      onUsertNameChange.setCustomValidity('Обязательное поле');
+    } else if (valueLength < window.setup.MIN_NAME_LENGTH) {
+      onUsertNameChange.setCustomValidity('Ещё ' + (window.setup.MIN_NAME_LENGTH - valueLength) + ' симв.');
+    } else if (valueLength > window.setup.MAX_NAME_LENGTH) {
+      onUsertNameChange.setCustomValidity('Удалите лишние ' + (valueLength - window.setup.MAX_NAME_LENGTH) + ' симв.');
     } else {
-      userNameInput.setCustomValidity('');
+      onUsertNameChange.setCustomValidity('');
     }
   }
 
-  userNameInput.addEventListener('input', checkInputLengthUser);
+  onUsertNameChange.addEventListener('input', checkInputLengthUser);
 
   // функция генерирует случайным образом элемнты мага
   function randomWizardStyle(style) {
@@ -74,43 +74,43 @@
   }
 
   // меняем цвет мантии и передем его в скрытый input
-  var wizardsCoatColor = document.querySelector('.setup-wizard .wizard-coat');
+  var onWizardCoatClick = document.querySelector('.setup-wizard .wizard-coat');
   var wizardsCoatColorInputHidden = document.querySelector('input[name="coat-color"]');
 
   function clickChangeCoatColor() {
     var newColor = randomWizardStyle(window.setup.WIZARD_COAT_COLOR);
 
-    wizardsCoatColor.style.fill = newColor;
+    onWizardCoatClick.style.fill = newColor;
     wizardsCoatColorInputHidden.value = newColor;
   }
 
-  wizardsCoatColor.addEventListener('click', clickChangeCoatColor);
+  onWizardCoatClick.addEventListener('click', clickChangeCoatColor);
 
   // меняем цвет глаз и передем его в скрытый input
-  var wizardsEyesColor = document.querySelector('.setup-wizard .wizard-eyes');
+  var onWizardEyesClick = document.querySelector('.setup-wizard .wizard-eyes');
   var wizardsCoatEyesInputHidden = document.querySelector('input[name="eyes-color"]');
 
   function clickChangeColorEyes() {
     var newColor = randomWizardStyle(window.setup.WIZARD_EYES_COLOR);
 
-    wizardsEyesColor.style.fill = newColor;
+    onWizardEyesClick.style.fill = newColor;
     wizardsCoatEyesInputHidden.value = newColor;
   }
 
-  wizardsEyesColor.addEventListener('click', clickChangeColorEyes);
+  onWizardEyesClick.addEventListener('click', clickChangeColorEyes);
 
   // меняем цвет фаербола и передем его в скрытый input
-  var wizardsFireball = document.querySelector('.setup-fireball-wrap');
-  var wizardsFireballInputHidden = wizardsFireball.querySelector('input');
+  var onFireballClick = document.querySelector('.setup-fireball-wrap');
+  var wizardsFireballInputHidden = onFireballClick.querySelector('input');
 
   function clickChangeFireballColor() {
-    var newBackground = randomWizardStyle(window.WIZARD_FIREBALL_COLOR);
+    var newBackground = randomWizardStyle(window.setup.WIZARD_FIREBALL_COLOR);
 
-    wizardsFireball.style.background = newBackground;
+    onFireballClick.style.background = newBackground;
     wizardsFireballInputHidden.value = newBackground;
   }
 
-  wizardsFireball.addEventListener('click', clickChangeFireballColor);
+  onFireballClick.addEventListener('click', clickChangeFireballColor);
 
   // перемещение окна
   var setupDialogElement = document.querySelector('.setup');
