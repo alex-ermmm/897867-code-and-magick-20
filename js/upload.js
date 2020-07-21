@@ -3,15 +3,21 @@
 (function () {
   var URL = 'https://javascript.pages.academy/code-and-magick';
 
-  window.upload = function (data, onSuccess) {
+  function uploadData(data, onSuccess) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
-    xhr.addEventListener('load', function () {
+    function onSuccessHandler() {
       onSuccess(xhr.response);
-    });
+    }
+
+    xhr.addEventListener('load', onSuccessHandler);
 
     xhr.open('POST', URL);
     xhr.send(data);
+  }
+
+  window.upload = {
+    uploadData: uploadData
   };
 })();

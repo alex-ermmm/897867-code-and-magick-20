@@ -206,7 +206,7 @@
     return similarListElement.appendChild(fragment);
   }
 
-  window.load(window.loadData.URL, window.backend.onSuccess, window.backend.onError);
+  window.loadData.load(window.loadData.URL, window.backend.onSuccess, window.backend.onError);
 
   document.querySelector('.setup-similar').classList.remove('hidden');
 
@@ -215,7 +215,7 @@
   }
 
   function submitFormHandler(evt) {
-    window.upload(new FormData(form), responseOk);
+    window.upload.uploadData(new FormData(form), responseOk);
     evt.preventDefault();
   }
 
