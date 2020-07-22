@@ -171,4 +171,62 @@
   }
 
   dialogHandler.addEventListener('mousedown', movePopup);
+
+  // куда будем вставлять магов
+  var similarListElement = document.querySelector('.setup-similar-list');
+
+  // шаблон элементов
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+
+  // отрисовываем элементы (карточки) магов
+  function createWizardElement(name, coatColor, eyesColor) {
+    var wizardElement = similarWizardTemplate.cloneNode(true);
+
+    // вставлем случайное имя
+    wizardElement.querySelector('.setup-similar-label').textContent = name;
+
+    // заливаем плащ случайным цветом из массива
+    wizardElement.querySelector('.wizard-coat').style.fill = coatColor;
+
+    // заливаем глаза случайным цветом из массива
+    wizardElement.querySelector('.wizard-eyes').style.fill = eyesColor;
+
+    return wizardElement;
+  }
+
+  function renderWizards(data) {
+    var fragment = document.createDocumentFragment();
+
+    // записываем в фрагмент
+    for (var i = 0; i < window.setup.COUNT_WIZARDS; i++) {
+      fragment.appendChild(createWizardElement(data[i].name, data[i].colorCoat, data[i].colorEyes));
+    }
+
+    // выводим магов в блок похожих персонажей
+    return similarListElement.appendChild(fragment);
+  }
+
+  window.loadData.load(window.loadData.URL, window.backend.onSuccess, window.backend.onError);
+
+  document.querySelector('.setup-similar').classList.remove('hidden');
+
+  function responseOk() {
+    setupDialogElement.classList.add('hidden');
+  }
+
+  function submitFormHandler(evt) {
+    window.upload.uploadData(new FormData(form), responseOk);
+    evt.preventDefault();
+  }
+
+  var form = document.querySelector('.setup-wizard-form');
+  form.addEventListener('submit', submitFormHandler);
+
+
+  window.dialog = {
+    setupDialogElement: setupDialogElement,
+    setup: setup,
+    renderWizards: renderWizards
+  };
+
 })();
